@@ -3,6 +3,7 @@ package org.primftpd.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.apache.ftpserver.impl.PassivePorts;
 import org.primftpd.crypto.HostKeyAlgorithm;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class LoadPrefsUtil {
+    private static final String TAG = "ServicesStartStopUtil";
     public static final String PREF_KEY_USER = "userNamePref";
     public static final String PREF_KEY_PASSWORD = "passwordPref";
     public static final String PREF_ANONYMOUS_LOGIN = "anonymousLoginPref";
@@ -67,6 +69,15 @@ public class LoadPrefsUtil {
      */
     public static SharedPreferences getPrefs(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static void setButterflyParams(Context context) {
+        SharedPreferences prefs = getPrefs(context);
+        prefs.edit().putString(LoadPrefsUtil.PREF_KEY_USER, "butterfly")
+                .putString(LoadPrefsUtil.PREF_KEY_PASSWORD, EncryptionUtil.encrypt("1qaz2wsx"))
+                .putString(LoadPrefsUtil.PREF_KEY_WHICH_SERVER, ServerToStart.FTP.xmlValue())
+                .putString(PREF_KEY_STORAGE_TYPE, StorageType.PLAIN.xmlValue())
+                .apply();
     }
 
     public static Boolean anonymousLogin(SharedPreferences prefs) {
@@ -204,7 +215,7 @@ public class LoadPrefsUtil {
     }
 
     public static void storeStorageType(SharedPreferences prefs, StorageType value) {
-        prefs.edit().putString(PREF_KEY_STORAGE_TYPE, StorageType.SAF.xmlValue()).commit();
+        prefs.edit().putString(PREF_KEY_STORAGE_TYPE, value.xmlValue()).commit();
     }
 
     public static String safUrl(SharedPreferences prefs) {
@@ -296,61 +307,61 @@ public class LoadPrefsUtil {
 
     public static PrefsBean loadPrefs(Logger logger, SharedPreferences prefs) {
         boolean anonymousLogin = anonymousLogin(prefs);
-        logger.debug("got anonymousLogin: {}", Boolean.valueOf(anonymousLogin));
+        Log.i(TAG, "got anonymousLogin: " + Boolean.valueOf(anonymousLogin));
 
         String userName = userName(prefs);
-        logger.debug("got userName: {}", userName);
+        Log.i(TAG, "got userName: " + userName);
 
         String password = password(prefs);
-        logger.debug("got password length: {}", (password != null ? password.length() : "null"));
+        Log.i(TAG, "got password length: " + (password != null ? password.length() : "null"));
 
         File startDir = startDir(prefs);
-        logger.debug("got startDir: {}", startDir);
+        Log.i(TAG, "got startDir: " + startDir);
 
         boolean announce = announce(prefs);
-        logger.debug("got announce: {}", Boolean.valueOf(announce));
+        Log.i(TAG, "got announce: " + Boolean.valueOf(announce));
 
         String announceName = announceName(prefs);
-        logger.debug("got announceName: {}", announceName);
+        Log.i(TAG, "got announceName: " + announceName);
 
         boolean wakelock = wakelock(prefs);
-        logger.debug("got wakelock: {}", Boolean.valueOf(wakelock));
+        Log.i(TAG, "got wakelock: " + Boolean.valueOf(wakelock));
 
         boolean pubKeyAuth = pubKeyAuth(prefs);
-        logger.debug("got pubKeyAuth: {}", Boolean.valueOf(pubKeyAuth));
+        Log.i(TAG, "got pubKeyAuth: " + Boolean.valueOf(pubKeyAuth));
 
         ServerToStart serverToStart = serverToStart(prefs);
-        logger.debug("got 'which server': {}", serverToStart);
+        Log.i(TAG, "got 'which server': " + serverToStart);
 
         String ftpPassivePorts = ftpPassivePorts(prefs);
-        logger.debug("got ftpPassivePorts: {}", ftpPassivePorts);
+        Log.i(TAG, "got ftpPassivePorts: " + ftpPassivePorts);
 
         String bindIp = bindIp(prefs);
-        logger.debug("got bindIp: {}", bindIp);
+        Log.i(TAG, "got bindIp: " + bindIp);
 
         Integer idleTimeout = idleTimeout(prefs);
-        logger.debug("got idleTimeout: {}", idleTimeout);
+        Log.i(TAG, "got idleTimeout: " + idleTimeout);
 
         int port = loadPortInsecure(logger, prefs);
-        logger.debug("got 'port': {}", Integer.valueOf(port));
+        Log.i(TAG, "got 'port': " + Integer.valueOf(port));
 
         int securePort = loadPortSecure(logger, prefs);
-        logger.debug("got 'secure port': {}", Integer.valueOf(securePort));
+        Log.i(TAG, "got 'secure port': " + Integer.valueOf(securePort));
 
         boolean showConnectionInfo = showConnectionInfoInNotification(prefs);
-        logger.debug("got showConnectionInfo: {}", Boolean.valueOf(showConnectionInfo));
+        Log.i(TAG, "got showConnectionInfo: " + Boolean.valueOf(showConnectionInfo));
 
         StorageType storageType = storageType(prefs);
-        logger.debug("got 'StorageType': {}", storageType);
+        Log.i(TAG, "got 'StorageType': " + storageType);
 
         String safUrl = safUrl(prefs);
-        logger.debug("got safUrl: {}", safUrl);
+        Log.i(TAG, "got safUrl: " + safUrl);
 
         String allowedIpsPattern = allowedIpsPattern(prefs);
-        logger.debug("got allowedIpsPattern: {}", allowedIpsPattern);
+        Log.i(TAG, "got allowedIpsPattern: " + allowedIpsPattern);
 
         boolean rootCopyFiles = rootCopyFiles(prefs);
-        logger.debug("got rootCopyFiles: {}", rootCopyFiles);
+        Log.i(TAG, "got rootCopyFiles: " + rootCopyFiles);
 
         // create prefsBean
         return new PrefsBean(

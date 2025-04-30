@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import java.util.List;
  */
 public class ServicesStartStopUtil {
 
+    private static final String TAG = "ServicesStartStopUtil";
+
     public static final String EXTRA_PREFS_BEAN = "prefs.bean";
     public static final String EXTRA_FINGERPRINT_PROVIDER = "fingerprint.provider";
     public static final String EXTRA_QUICK_SHARE_BEAN = "quick.share.bean";
@@ -44,6 +47,7 @@ public class ServicesStartStopUtil {
     public static void startServers(PftpdFragment fragment) {
         startServers(null, null, null, fragment, null);
     }
+
     public static void startServers(Context context) {
         startServers(context, null, null, null, null);
     }
@@ -58,13 +62,13 @@ public class ServicesStartStopUtil {
             KeyFingerprintProvider keyFingerprintProvider,
             PftpdFragment fragment,
             QuickShareBean quickShareBean) {
-        LOGGER.trace("startServers()");
+        Log.i(TAG, "startServers()");
 
         if (context == null && fragment != null) {
             context = fragment.getContext();
         }
         if (context == null) {
-            LOGGER.error("context is null, not starting server");
+            Log.i(TAG, "context is null, not starting server");
             return;
         }
 
@@ -88,9 +92,9 @@ public class ServicesStartStopUtil {
 
         if (!isPasswordOk(prefsBean)) {
             Toast.makeText(
-                context,
-                R.string.haveToSetAuthMechanism,
-                Toast.LENGTH_LONG).show();
+                    context,
+                    R.string.haveToSetAuthMechanism,
+                    Toast.LENGTH_LONG).show();
 
             if (fragment == null) {
                 // Launch the main activity so that the user may set their password.
@@ -117,7 +121,7 @@ public class ServicesStartStopUtil {
                         Intent intent = createSshServiceIntent(context, prefsBean, keyFingerprintProvider, quickShareBean);
                         startServerByIntent(intent, context);
                     } catch (Exception e) {
-                        LOGGER.error("could not start sftp server", e);
+                        Log.i(TAG, "could not start sftp server", e);
                         Toast.makeText(
                                 context,
                                 "could not start sftp server, " + e.getMessage(),
@@ -132,7 +136,7 @@ public class ServicesStartStopUtil {
                         Intent intent = createFtpServiceIntent(context, prefsBean, keyFingerprintProvider, quickShareBean);
                         startServerByIntent(intent, context);
                     } catch (Exception e) {
-                        LOGGER.error("could not start ftp server", e);
+                        Log.i(TAG, "could not start ftp server", e);
                         Toast.makeText(
                                 context,
                                 "could not start ftp server, " + e.getMessage(),
@@ -151,7 +155,7 @@ public class ServicesStartStopUtil {
                 keyFingerprintProvider.calcPubkeyFingerprints(context);
             }
             boolean keyPresent = keyFingerprintProvider.isKeyPresent();
-            LOGGER.trace("isKeyPresent() -> {}", keyPresent);
+            Log.i(TAG, "isKeyPresent() -> " + keyPresent);
             return keyPresent;
         } else {
             LOGGER.debug("params are null, cannot check for key");
@@ -160,7 +164,7 @@ public class ServicesStartStopUtil {
     }
 
     private static void showGenKeyDialog(PftpdFragment fragment) {
-        LOGGER.trace("showGenKeyDialog()");
+        Log.i(TAG, "showGenKeyDialog()");
         GenKeysAskDialogFragment askDiag = new GenKeysAskDialogFragment(fragment);
         Bundle diagArgs = new Bundle();
         diagArgs.putBoolean(GenKeysAskDialogFragment.KEY_START_SERVER, true);
@@ -173,10 +177,10 @@ public class ServicesStartStopUtil {
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 //                context.startForegroundService(intent);
 //            } else {
-                context.startService(intent);
+            context.startService(intent);
 //            }
         } catch (Exception e) {
-            LOGGER.error("could not start server, using workaround with activity", e);
+            Log.i(TAG, "could not start server, using workaround with activity", e);
             Intent activityIntent = new Intent(context, StartServerAndExitActivity.class);
             activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(activityIntent);
@@ -184,7 +188,7 @@ public class ServicesStartStopUtil {
     }
 
     public static void stopServers(Context context) {
-        LOGGER.trace("stopServers()");
+        Log.i(TAG, "stopServers()");
         context.stopService(createFtpServiceIntent(context, null, null, null));
         context.stopService(createSshServiceIntent(context, null, null, null));
     }
@@ -259,8 +263,7 @@ public class ServicesStartStopUtil {
         return serversRunning;
     }
 
-    private static void updateWidget(Context context, boolean running)
-    {
+    private static void updateWidget(Context context, boolean running) {
         LOGGER.debug("updateWidget()");
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
 
@@ -297,7 +300,7 @@ public class ServicesStartStopUtil {
             PrefsBean prefsBean,
             KeyFingerprintProvider keyFingerprintProvider,
             QuickShareBean quickShareBean) {
-        LOGGER.trace("updateNonActivityUI()");
+        Log.i(TAG, "updateNonActivityUI()");
         Notification notification = null;
         updateWidget(ctxt, serverRunning);
         if (serverRunning) {
