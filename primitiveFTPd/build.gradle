@@ -24,7 +24,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId "org.primftpd"
+        applicationId "org.butterfly.primftpd"
         minSdkVersion 15
         targetSdkVersion 33
         versionCode 67
@@ -67,6 +67,7 @@ android {
     lintOptions {
         // we cannot be sure that all translations are present
         abortOnError false
+        checkReleaseBuilds false
     }
 
     compileOptions {
@@ -100,7 +101,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'eu.chainfire:libsuperuser:1.1.1'
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0'
-    implementation ('me.dm7.barcodescanner:zxing:1.9.8') {
+    implementation('me.dm7.barcodescanner:zxing:1.9.8') {
         exclude group: 'com.android.support'
     }
 

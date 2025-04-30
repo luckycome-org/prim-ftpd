@@ -340,10 +340,12 @@ public class SshServer extends AbstractFactoryManager implements ServerFactoryMa
      */
     public List<AbstractSession> getActiveSessions() {
         List<AbstractSession> sessions = new ArrayList<AbstractSession>();
-        for (IoSession ioSession : acceptor.getManagedSessions().values()) {
-            AbstractSession session = AbstractSession.getSession(ioSession, true);
-            if (session != null) {
-                sessions.add(session);
+        if (acceptor != null) {
+            for (IoSession ioSession : acceptor.getManagedSessions().values()) {
+                AbstractSession session = AbstractSession.getSession(ioSession, true);
+                if (session != null) {
+                    sessions.add(session);
+                }
             }
         }
         return sessions;

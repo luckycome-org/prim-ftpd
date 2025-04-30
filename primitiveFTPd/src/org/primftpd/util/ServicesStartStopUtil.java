@@ -170,11 +170,11 @@ public class ServicesStartStopUtil {
 
     private static void startServerByIntent(Intent intent, Context context) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                context.startForegroundService(intent);
-            } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//                context.startForegroundService(intent);
+//            } else {
                 context.startService(intent);
-            }
+//            }
         } catch (Exception e) {
             LOGGER.error("could not start server, using workaround with activity", e);
             Intent activityIntent = new Intent(context, StartServerAndExitActivity.class);

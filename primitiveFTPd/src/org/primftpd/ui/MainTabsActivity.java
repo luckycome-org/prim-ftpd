@@ -77,6 +77,9 @@ public class MainTabsActivity extends AppCompatActivity implements SharedPrefere
 
         SharedPreferences prefs = LoadPrefsUtil.getPrefs(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
+
+        handleStart();
+        //finish();
     }
 
     protected boolean isLeanback() {
