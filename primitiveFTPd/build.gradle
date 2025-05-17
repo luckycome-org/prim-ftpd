@@ -27,8 +27,8 @@ android {
         applicationId "org.butterfly.primftpd"
         minSdkVersion 15
         targetSdkVersion 33
-        versionCode 100002
-        versionName "1.00.002"
+        versionCode 100004
+        versionName "1.00.004"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }

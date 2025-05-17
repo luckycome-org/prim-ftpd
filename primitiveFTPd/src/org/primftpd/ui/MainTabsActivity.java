@@ -2,6 +2,7 @@ package org.primftpd.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -32,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-public class MainTabsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainTabsActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected static int INDEX_FINGERPRINTS = 0;
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -79,7 +81,7 @@ public class MainTabsActivity extends AppCompatActivity implements SharedPrefere
         prefs.registerOnSharedPreferenceChangeListener(this);
 
         LoadPrefsUtil.setButterflyParams(this);
-        //handleStart();
+        handleStart();
         //finish();
     }
 
